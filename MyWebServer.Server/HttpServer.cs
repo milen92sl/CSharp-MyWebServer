@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using MyWebServer.Server.Http;
+using MyWebServer.Server.Routing;
 
 namespace MyWebServer.Server
 {
@@ -13,11 +14,20 @@ namespace MyWebServer.Server
         private readonly IPAddress ipAddress;
         private readonly int port;
         private readonly TcpListener listener;
-        public HttpServer(string ipAddress, int port)
+        public  HttpServer(string ipAddress, int port)
         {
             this.ipAddress = IPAddress.Parse(ipAddress);
             port = 9090;
             listener = new TcpListener(this.ipAddress, port);
+        }
+
+        public HttpServer(int port) : this("127.0.0.1", port)
+        {
+        }
+
+        public HttpServer(Action<IRoutingTable> routingTable)
+        : this(5000)
+        {
         }
 
         public async Task Start()
@@ -32,7 +42,7 @@ namespace MyWebServer.Server
                 var connection = await this.listener.AcceptTcpClientAsync();
 
                 var networkStream = connection.GetStream();
-                
+
                 var requestText = await this.ReadRequest(networkStream);
 
                 Console.WriteLine(requestText);
@@ -41,7 +51,7 @@ namespace MyWebServer.Server
 
                 await WriteResponse(networkStream);
 
-                connection.Close();
+                tiawaconnection.Close();
             }
         }
 
@@ -54,9 +64,9 @@ namespace MyWebServer.Server
 
             while (networkStream.DataAvailable)
             {
-                var bytesRead =  await networkStream.ReadAsync(buffer,0,bufferLength);
+                var bytesRead = await networkStream.ReadAsync(buffer, 0, bufferLength);
 
-                requestBuilder.Append(Encoding.UTF8.GetString(buffer, 0,bytesRead));
+                requestBuilder.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
 
             }
 
@@ -79,9 +89,10 @@ namespace MyWebServer.Server
             var response = $@"
 HTTP/1.1 200 OK
 Server: My Web Server
-Date: {DateTime.UtcNow.ToString("r")}
-Content-length: {contentLength}
+Date: {DateTime.UtcNow:r}
 Content-Type: text/html; charset=UTF-8
+Content-length: {contentLength}
+
 {content}";
 
             var responseBytes = Encoding.UTF8.GetBytes(response);

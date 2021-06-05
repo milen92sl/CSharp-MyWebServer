@@ -1,7 +1,7 @@
-﻿using MyWebServer.Server.Common;
-
-namespace MyWebServer.Server.Http
+﻿namespace MyWebServer.Http
 {
+    using MyWebServer.Common;
+
     public class HttpHeader
     {
         public HttpHeader(string name, string value)
@@ -13,8 +13,11 @@ namespace MyWebServer.Server.Http
             this.Value = value;
         }
 
+        public string Name { get; init; }
 
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string Value { get; init; }
+
+        public override string ToString()
+            => $"{this.Name}: {this.Value}";
     }
 }

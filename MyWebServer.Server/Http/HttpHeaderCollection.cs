@@ -10,7 +10,10 @@ namespace MyWebServer.Server.Http
             new Dictionary<string, HttpHeader>();
 
         public int Count => this.headers.Count;
-        public void Add(HttpHeader header) =>
-            this.headers.Add(header.Name, header);
+        public void Add(string name, string value)
+        {
+            var header = new HttpHeader(name, value);
+            this.headers.Add(name, header);
+        }
     }
 }

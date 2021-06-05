@@ -46,7 +46,7 @@ namespace MyWebServer.Server.Http
                 "POST" => HttpMethod.Post,
                 "PUT" => HttpMethod.Put,
                 "DELETE" => HttpMethod.Delete,
-                _ => throw new InvalidOperationException($"Method '{method}' is not supported!")
+                _ => HttpMethod.Get,
             };
         }
 

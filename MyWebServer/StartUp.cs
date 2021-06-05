@@ -1,18 +1,16 @@
 ﻿namespace MyWebServer
 {
-    using System;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Text;
     using System.Threading.Tasks;
     using MyWebServer.Server;
+    using MyWebServer.Server.Responses;
+
     public class StartUp
     {
         public static async Task Main()
-        {
-            // http://localhost:9090
-
-            var server = new HttpServer("127.0.0.1",9090);
-        }
+            => await new HttpServer("127.0.0.1",9090, routes => routes
+                    .Map("/",new TextResponse("Hello From Milen!"))
+                    .Map("/Cats",new TextResponse("Hello from the Cats!"))
+                .Start();
     }
 }
+

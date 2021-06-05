@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MyWebServer.Server.Common;
 
 namespace MyWebServer.Server.Http
 {
-    public class HttpResponse
+    public abstract class HttpResponse
     {
-        public HttpStatusCode StatusCode {get; set;}
+
+        public HttpResponse(HttpStatusCode statusCode)
+        {
+            this.StatusCode = statusCode;
+            this.Headers.Add("Server", "My Web Server");
+            this.Headers.Add("Date", $"{DateTime.UtcNow:r}");
+        }
+        public HttpStatusCode StatusCode {get; init;}
 
         public HttpHeaderCollection Headers = new HttpHeaderCollection();
 
